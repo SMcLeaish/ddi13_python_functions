@@ -1,37 +1,31 @@
 from typing import Self
+from dataclasses import dataclass
 
 
+@dataclass(frozen=True, slots=True)
 class SecretMessage:
-    def __init__(self):
-        self.msg: str = ""
-        self.name: str = ""
-        self.clean: str = ""
+    msg: str
+    name: str
+    clean: str
 
-    def get_info(self) -> Self:
-        self.msg = input("Enter your secret party message: ")
-        self.name = input("Enter the guest's name: ")
-        return self
+    @classmethod
+    def create(cls, msg: str, name: str) -> Self:
+        return cls(msg=msg, name=name, clean=msg.strip())
 
-    def cleaned(self) -> Self:
-        self.clean = self.msg.strip()
-        return self
-
-    def upper(self) -> Self:
-        self.clean = self.clean.upper()
-        return self
-
-    def reverse(self) -> Self:
-        self.clean = " ".join(reversed(self.clean))
-        return self
-
-    def print_secret(self) -> None:
-        print(f"Hey {self.name}, here's your secret code {secret}")
-
-    @staticmethod
-    def reverse_message(secret_message: "SecretMessage") -> str:
-        secret_message.get_info().cleaned().upper().reverse()
-        return secret_message.clean
+    def make_secret(self) -> str:
+        return "".join(reversed(self.clean.upper()))
 
 
-secret = SecretMessage()
-print(secret.reverse_message(secret))
+def get_info() -> tuple[str, str]:
+    msg = input("Enter your secret party message: ")
+    name = input("Enter the guest's name: ")
+    return (msg, name)
+
+
+def new_secret_message() -> str:
+    msg, name = get_info()
+    message = SecretMessage.create(msg, name)
+    return message.make_secret()
+
+
+print(new_secret_message())
