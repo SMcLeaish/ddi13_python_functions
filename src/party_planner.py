@@ -1,32 +1,40 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True, slots=True)
+class PartyPlan:
+    num: int
+    cost: float
+    loc: str
+    disc: float | None
+    add_cost: float | None
+
+    @property
+    def total(self) -> float:
+        return self.num * self.cost
+
+    @property
+    def total_after_discount(self) -> float:
+        total_cost = self.total
+        return (self.disc and total_cost - (total_cost * self.disc)) or total_cost
+
+    @property
+    def summary_total(self) -> float | None:
+        return self.total_after_discount + (self.add_cost or 0)
+
+
+def print_party_summary(
+    num: int,
+    cost: float,
+    loc: str,
+    disc: float | None = None,
+    add_cost: float | None = None,
+) -> None:
+    party_plan = PartyPlan(num, cost, loc, disc, add_cost)
+    print(
+        f"We will have {party_plan.num} guests at {party_plan.loc} and the total cost is {party_plan.summary_total:.2f}"
+    )
+
+
 print("Hello neighbors, let's plan a party!")
-number_of_guests: int = 12
-cost_per_person: float = 3.50
-party_location: str = "Mi casita"
-
-
-class Total_Cost:
-    def __init__(self, num: int, cost: float, loc: str):
-        self.num: int = num
-        self.cost: float = cost
-        self.total: float = self.num * self.cost
-        self.add_cost: float
-        self.loc: str = loc
-        self.discount: float = 0.05
-
-    def apply_discount(self):
-        self.total = self.total - (self.total * self.discount)
-
-    def print_total(self):
-        print(self.total + self.add_cost)
-
-    def print_summary(self):
-        print(
-            f"We will have {self.num} guests at {self.loc} and the total cost is {self.total:.2f}"
-        )
-
-
-party = Total_Cost(number_of_guests, cost_per_person, party_location)
-party.print_total
-party.print_summary()
-party.apply_discount()
-party.print_summary()
+print_party_summary(num=15, cost=13.75, loc="Mi Casita")
