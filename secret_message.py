@@ -31,6 +31,6 @@ print("Y) Yes")
 print("N) No\n")
 user_accept = input("Enter Y for Yes. Enter N for No: ")
 if user_accept == "Y":
-    print("Awesome! Enjoy the party!")
+    print("This message will self destruct in five seconds!")
 else:
-    print("Sorry, we couldn't help you")
+    print("You should really accept it")
